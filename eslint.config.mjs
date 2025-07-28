@@ -13,7 +13,13 @@ export default tseslint.config(
   jsxA11y.flatConfigs.recommended,
   eslintPluginAstro.configs.recommended,
   {
-    ignores: ["**/build/**", "**/dist/**", "**/coverage/**", "scripts/**", ".astro/**"],
+    ignores: [
+      "**/build/**",
+      "**/dist/**",
+      "**/coverage/**",
+      "scripts/**",
+      ".astro/**",
+    ],
   },
   {
     languageOptions: {
@@ -21,18 +27,38 @@ export default tseslint.config(
         project: true,
         tsconfigRootDir: import.meta.dirname,
       },
+      globals: {
+        // Browser globals for client-side code
+        window: "readonly",
+        document: "readonly",
+        console: "readonly",
+        alert: "readonly",
+        confirm: "readonly",
+        prompt: "readonly",
+        fetch: "readonly",
+        localStorage: "readonly",
+        sessionStorage: "readonly",
+      },
     },
   },
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { ignoreRestSiblings: true },
+      ],
+      "sonarjs/no-unused-vars": "off",
     },
   },
   {
     files: ["**/*.astro"],
     rules: {
+      "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-misused-promises": "off",
       "sonarjs/prefer-read-only-props": "off",
+      // Allow more flexible typing in Astro files
+      "jsx-a11y/label-has-associated-control": "off",
     },
-  }
+  },
 );

@@ -64,15 +64,15 @@ Edit `src/config/site.ts` to customize your store:
 
 ```typescript
 export const defaultSiteConfig: SiteConfig = {
-  name: 'Your Store Name',
-  description: 'Your store description',
-  logo: '/logo.png',
-  favicon: '/favicon.ico',
+  name: "Your Store Name",
+  description: "Your store description",
+  logo: "/logo.png",
+  favicon: "/favicon.ico",
   theme: defaultTheme,
   productTypes: defaultProductTypes,
   stripe: {
-    publishableKey: import.meta.env.STRIPE_PUBLISHABLE_KEY ?? '',
-    webhookSecret: import.meta.env.STRIPE_WEBHOOK_SECRET ?? '',
+    publishableKey: import.meta.env.STRIPE_PUBLISHABLE_KEY ?? "",
+    webhookSecret: import.meta.env.STRIPE_WEBHOOK_SECRET ?? "",
   },
 };
 ```
@@ -88,27 +88,27 @@ Themes are defined in `src/config/site.ts`. You can customize:
 
 ```typescript
 export const customTheme: ThemeConfig = {
-  name: 'custom',
+  name: "custom",
   colors: {
-    primary: '#FF6B6B',
-    secondary: '#4ECDC4',
-    accent: '#45B7D1',
-    background: '#FFFFFF',
-    surface: '#F8F9FA',
-    text: '#2C3E50',
-    textSecondary: '#7F8C8D',
+    primary: "#FF6B6B",
+    secondary: "#4ECDC4",
+    accent: "#45B7D1",
+    background: "#FFFFFF",
+    surface: "#F8F9FA",
+    text: "#2C3E50",
+    textSecondary: "#7F8C8D",
   },
   fonts: {
-    heading: 'Poppins, sans-serif',
-    body: 'Inter, sans-serif',
+    heading: "Poppins, sans-serif",
+    body: "Inter, sans-serif",
   },
-  borderRadius: '0.75rem',
+  borderRadius: "0.75rem",
   spacing: {
-    xs: '0.25rem',
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '1.5rem',
-    xl: '2rem',
+    xs: "0.25rem",
+    sm: "0.5rem",
+    md: "1rem",
+    lg: "1.5rem",
+    xl: "2rem",
   },
 };
 ```
@@ -120,31 +120,31 @@ Define your product types and variations in `src/config/site.ts`:
 ```typescript
 export const customProductTypes: ProductType[] = [
   {
-    id: 't-shirts',
-    name: 'T-Shirts',
-    description: 'Comfortable cotton t-shirts',
+    id: "t-shirts",
+    name: "T-Shirts",
+    description: "Comfortable cotton t-shirts",
     variations: [
       {
-        id: 'size',
-        name: 'Size',
-        type: 'select',
+        id: "size",
+        name: "Size",
+        type: "select",
         required: true,
         options: [
-          { id: 's', name: 'Small', priceModifier: 0, enabled: true },
-          { id: 'm', name: 'Medium', priceModifier: 0, enabled: true },
-          { id: 'l', name: 'Large', priceModifier: 0, enabled: true },
-          { id: 'xl', name: 'X-Large', priceModifier: 2, enabled: true },
+          { id: "s", name: "Small", priceModifier: 0, enabled: true },
+          { id: "m", name: "Medium", priceModifier: 0, enabled: true },
+          { id: "l", name: "Large", priceModifier: 0, enabled: true },
+          { id: "xl", name: "X-Large", priceModifier: 2, enabled: true },
         ],
       },
       {
-        id: 'color',
-        name: 'Color',
-        type: 'select',
+        id: "color",
+        name: "Color",
+        type: "select",
         required: true,
         options: [
-          { id: 'black', name: 'Black', priceModifier: 0, enabled: true },
-          { id: 'white', name: 'White', priceModifier: 0, enabled: true },
-          { id: 'navy', name: 'Navy', priceModifier: 1, enabled: true },
+          { id: "black", name: "Black", priceModifier: 0, enabled: true },
+          { id: "white", name: "White", priceModifier: 0, enabled: true },
+          { id: "navy", name: "Navy", priceModifier: 1, enabled: true },
         ],
       },
     ],
@@ -259,9 +259,9 @@ Create new pages in `src/pages/`:
 
 ```astro
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar';
-import { getSiteConfig } from '../config/site';
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar";
+import { getSiteConfig } from "../config/site";
 
 const siteConfig = getSiteConfig();
 ---
@@ -269,7 +269,7 @@ const siteConfig = getSiteConfig();
 <Layout title="About Us">
   <Navbar siteConfig={siteConfig} client:load />
 
-  <div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="mx-auto max-w-4xl px-4 py-8">
     <h1>About Us</h1>
     <p>Your content here...</p>
   </div>
@@ -281,7 +281,7 @@ const siteConfig = getSiteConfig();
 Create React components in `src/components/`:
 
 ```tsx
-import React from 'react';
+import React from "react";
 
 interface MyComponentProps {
   title: string;

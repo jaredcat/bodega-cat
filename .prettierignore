@@ -1,0 +1,31 @@
+# Build outputs
+dist/
+build/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Package files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.min.js
+*.min.css
+
+# Coverage reports
+coverage/
+
+# Temporary files
+*.tmp
+*.temp

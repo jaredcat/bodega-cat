@@ -1,0 +1,20 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit",
+    "source.fixAll.tslint": "explicit"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "astro"
+  ],
+  "prettier.documentSelectors": ["**/*.astro"],
+  "astro.enableCodeLens": true,
+  "astro.enableTypeScript": true,
+  "typescript.preferences.includePackageJsonAutoImports": "on"
+}

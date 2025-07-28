@@ -17,17 +17,8 @@ on:
 
 jobs:
   deploy:
-    strategy:
-      matrix:
-        include:
-          - app: main
-            build_path: ./packages/main/build/client
-            workspace: "@stripe-shop/main"
-          - app: admin
-            build_path: ./packages/admin/dist
-            workspace: "@stripe-shop/admin"
     runs-on: ubuntu-latest
-    name: Deploy ${{ matrix.app }}
+    name: Deploy to Cloudflare Pages
     permissions:
       contents: read
       deployments: write
@@ -35,43 +26,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: enable corepack
-        run: corepack enable
-
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "lts/jod"
-          cache: "yarn"
+          node-version: "lts"
+          cache: "npm"
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build shared dependencies
-        run: yarn workspace @stripe-shop/shared-types build
+        run: npm ci
 
       - name: Build
-        run: yarn workspace ${{ matrix.workspace }} build
+        run: npm run build
         env:
           NODE_ENV: production
 
-      - name: Deploy to Cloudflare Pages (Push)
-        if: github.event_name == 'push'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ${{ matrix.build_path }} --project-name=${{ vars.CF_PROJECT_NAME }}${{ matrix.app == 'admin' && '-admin' || '' }}
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deploy to Cloudflare Pages (Manual)
-        if: github.event_name == 'workflow_dispatch'
+      - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: >-
-            pages deploy ${{ matrix.build_path }}
-            --project-name=${{ vars.CF_PROJECT_NAME }}${{ matrix.app == 'admin' && '-admin' || '' }}
-            ${{ inputs.environment == 'staging' && '--branch=preview' || '' }}
+            pages deploy ./dist
+            --project-name=${{ vars.CF_PROJECT_NAME }}
+            ${{ github.ref == 'refs/heads/staging' || inputs.environment == 'staging' && '--branch=preview' || '' }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

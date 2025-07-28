@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar';
 import { getSiteConfig } from '../../config/site';
@@ -17,39 +18,39 @@ const tags = [...new Set(products.flatMap((p) => p.metadata.tags))];
 <Layout title="Shop">
   <Navbar siteConfig={siteConfig} client:load />
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold mb-4">Shop</h1>
+      <h1 class="mb-4 text-3xl font-bold">Shop</h1>
       <p class="text-muted">Discover our collection of amazing products</p>
     </div>
 
     <!-- Filters and Products Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
       <!-- Filters Sidebar -->
       <div class="lg:col-span-1">
         <div class="card sticky top-8">
-          <h3 class="text-lg font-semibold mb-4">Filters</h3>
+          <h3 class="mb-4 text-lg font-semibold">Filters</h3>
 
           <!-- Search -->
           <div class="mb-6">
-            <label class="block text-sm font-medium mb-2">
+            <label class="mb-2 block text-sm font-medium">
               Search
 
-            <input
-              type="text"
-              id="search"
-              placeholder="Search products..."
-              class="input"
-            />
-                         </label>
+              <input
+                type="text"
+                id="search"
+                placeholder="Search products..."
+                class="input"
+              />
+            </label>
           </div>
 
           <!-- Categories -->
           {
             categories.length > 0 && (
               <div class="mb-6">
-                <h4 class="font-medium mb-3">Categories</h4>
+                <h4 class="mb-3 font-medium">Categories</h4>
                 <div class="space-y-2">
                   {categories.map((category) => (
                     <label class="flex items-center">
@@ -66,7 +67,7 @@ const tags = [...new Set(products.flatMap((p) => p.metadata.tags))];
           {
             tags.length > 0 && (
               <div class="mb-6">
-                <h4 class="font-medium mb-3">Tags</h4>
+                <h4 class="mb-3 font-medium">Tags</h4>
                 <div class="space-y-2">
                   {tags.map((tag) => (
                     <label class="flex items-center">
@@ -81,10 +82,10 @@ const tags = [...new Set(products.flatMap((p) => p.metadata.tags))];
 
           <!-- Price Range -->
           <div class="mb-6">
-            <h4 class="font-medium mb-3">Price Range</h4>
+            <h4 class="mb-3 font-medium">Price Range</h4>
             <div class="space-y-2">
               <input type="range" min="0" max="1000" class="w-full" />
-              <div class="flex justify-between text-sm text-muted">
+              <div class="text-muted flex justify-between text-sm">
                 <span>$0</span>
                 <span>$1000</span>
               </div>
@@ -100,34 +101,36 @@ const tags = [...new Set(products.flatMap((p) => p.metadata.tags))];
       <div class="lg:col-span-3">
         {
           products.length > 0 ? (
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
               {products.map((product) => (
-                <div class="card hover:shadow-lg transition-shadow">
+                <div class="card transition-shadow hover:shadow-lg">
                   {product.images.length > 0 && (
-                    <img
+                    <Image
                       src={product.images[0]}
                       alt={product.name}
-                      class="w-full h-48 object-cover rounded-t-lg mb-4"
+                      width={400}
+                      height={192}
+                      class="mb-4 h-48 w-full rounded-t-lg object-cover"
                     />
                   )}
-                  <h3 class="text-lg font-semibold mb-2">{product.name}</h3>
+                  <h3 class="mb-2 text-lg font-semibold">{product.name}</h3>
                   <p class="text-muted mb-4 line-clamp-2">
                     {product.description}
                   </p>
 
                   {/* Tags */}
                   {product.metadata.tags.length > 0 && (
-                    <div class="flex flex-wrap gap-1 mb-4">
+                    <div class="mb-4 flex flex-wrap gap-1">
                       {product.metadata.tags.slice(0, 3).map((tag) => (
-                        <span class="px-2 py-1 bg-primary/10 text-primary text-xs rounded">
+                        <span class="bg-primary/10 text-primary rounded px-2 py-1 text-xs">
                           {tag}
                         </span>
                       ))}
                     </div>
                   )}
 
-                  <div class="flex justify-between items-center">
-                    <span class="text-xl font-bold text-primary">
+                  <div class="flex items-center justify-between">
+                    <span class="text-primary text-xl font-bold">
                       ${(product.basePrice / 100).toFixed(2)}
                     </span>
                     <a href={`/shop/${product.slug}`} class="btn btn-primary">
@@ -138,7 +141,7 @@ const tags = [...new Set(products.flatMap((p) => p.metadata.tags))];
               ))}
             </div>
           ) : (
-            <div class="text-center py-12">
+            <div class="py-12 text-center">
               <p class="text-muted text-lg">No products found.</p>
             </div>
           )

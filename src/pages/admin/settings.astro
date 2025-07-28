@@ -1,6 +1,8 @@
 ---
-import { getSiteConfig } from '../../config/site';
-import Layout from '../../layouts/Layout.astro';
+export const prerender = false;
+
+import { getSiteConfig } from '@config/site';
+import Layout from '@layouts/Layout.astro';
 
 const siteConfig = getSiteConfig();
 ---
@@ -9,36 +11,36 @@ const siteConfig = getSiteConfig();
   <div class="min-h-screen bg-gray-50">
     <!-- Admin Header -->
     <header class="bg-white shadow">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center py-6">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between py-6">
           <div>
             <h1 class="text-3xl font-bold text-gray-900">Store Settings</h1>
-            <p class="text-gray-600">Configure your store settings and preferences</p>
+            <p class="text-gray-600">
+              Configure your store settings and preferences
+            </p>
           </div>
-          <a
-            href="/admin"
-            class="btn btn-outline"
-          >
-            Back to Dashboard
-          </a>
+          <a href="/admin" class="btn btn-outline"> Back to Dashboard </a>
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <!-- Store Information -->
-      <div class="bg-white rounded-lg shadow mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
+      <div class="mb-8 rounded-lg bg-white shadow">
+        <div class="border-b border-gray-200 px-6 py-4">
           <h2 class="text-lg font-medium text-gray-900">Store Information</h2>
         </div>
         <div class="p-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="store-name"
+                class="mb-2 block text-sm font-medium text-gray-700">
                 Store Name
               </label>
               <input
+                id="store-name"
                 type="text"
                 value={siteConfig.name}
                 class="input"
@@ -46,10 +48,13 @@ const siteConfig = getSiteConfig();
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="store-description"
+                class="mb-2 block text-sm font-medium text-gray-700">
                 Store Description
               </label>
               <input
+                id="store-description"
                 type="text"
                 value={siteConfig.description}
                 class="input"
@@ -57,10 +62,13 @@ const siteConfig = getSiteConfig();
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="logo-url"
+                class="mb-2 block text-sm font-medium text-gray-700">
                 Logo URL
               </label>
               <input
+                id="logo-url"
                 type="url"
                 value={siteConfig.logo}
                 class="input"
@@ -68,10 +76,13 @@ const siteConfig = getSiteConfig();
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="favicon-url"
+                class="mb-2 block text-sm font-medium text-gray-700">
                 Favicon URL
               </label>
               <input
+                id="favicon-url"
                 type="url"
                 value={siteConfig.favicon}
                 class="input"
@@ -83,21 +94,21 @@ const siteConfig = getSiteConfig();
       </div>
 
       <!-- Theme Settings -->
-      <div class="bg-white rounded-lg shadow mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
+      <div class="mb-8 rounded-lg bg-white shadow">
+        <div class="border-b border-gray-200 px-6 py-4">
           <h2 class="text-lg font-medium text-gray-900">Theme Settings</h2>
         </div>
         <div class="p-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700">
                 Primary Color
               </label>
               <div class="flex items-center space-x-2">
                 <input
                   type="color"
                   value={siteConfig.theme.colors.primary}
-                  class="w-12 h-10 rounded border"
+                  class="h-10 w-12 rounded border"
                 />
                 <input
                   type="text"
@@ -108,14 +119,14 @@ const siteConfig = getSiteConfig();
               </div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700">
                 Secondary Color
               </label>
               <div class="flex items-center space-x-2">
                 <input
                   type="color"
                   value={siteConfig.theme.colors.secondary}
-                  class="w-12 h-10 rounded border"
+                  class="h-10 w-12 rounded border"
                 />
                 <input
                   type="text"
@@ -126,14 +137,14 @@ const siteConfig = getSiteConfig();
               </div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700">
                 Accent Color
               </label>
               <div class="flex items-center space-x-2">
                 <input
                   type="color"
                   value={siteConfig.theme.colors.accent}
-                  class="w-12 h-10 rounded border"
+                  class="h-10 w-12 rounded border"
                 />
                 <input
                   type="text"
@@ -144,7 +155,7 @@ const siteConfig = getSiteConfig();
               </div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700">
                 Border Radius
               </label>
               <select class="input">
@@ -160,14 +171,14 @@ const siteConfig = getSiteConfig();
       </div>
 
       <!-- Stripe Configuration -->
-      <div class="bg-white rounded-lg shadow mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
+      <div class="mb-8 rounded-lg bg-white shadow">
+        <div class="border-b border-gray-200 px-6 py-4">
           <h2 class="text-lg font-medium text-gray-900">Payment Settings</h2>
         </div>
         <div class="p-6">
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700">
                 Stripe Publishable Key
               </label>
               <input
@@ -182,7 +193,7 @@ const siteConfig = getSiteConfig();
               </p>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
+              <label class="mb-2 block text-sm font-medium text-gray-700">
                 Webhook Secret
               </label>
               <input
@@ -201,44 +212,47 @@ const siteConfig = getSiteConfig();
       </div>
 
       <!-- Product Types -->
-      <div class="bg-white rounded-lg shadow mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
+      <div class="mb-8 rounded-lg bg-white shadow">
+        <div class="border-b border-gray-200 px-6 py-4">
           <h2 class="text-lg font-medium text-gray-900">Product Types</h2>
         </div>
         <div class="p-6">
           <div class="space-y-4">
-            {siteConfig.productTypes.map((productType) => (
-              <div class="border rounded-lg p-4">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h3 class="text-lg font-medium text-gray-900">{productType.name}</h3>
-                    <p class="text-sm text-gray-500">{productType.description}</p>
-                    {productType.variations.length > 0 && (
-                      <div class="mt-2">
-                        <p class="text-sm text-gray-600">
-                          Variations: {productType.variations.map(v => v.name).join(', ')}
-                        </p>
-                      </div>
-                    )}
+            {
+              siteConfig.productTypes.map((productType) => (
+                <div class="rounded-lg border p-4">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <h3 class="text-lg font-medium text-gray-900">
+                        {productType.name}
+                      </h3>
+                      <p class="text-sm text-gray-500">
+                        {productType.description}
+                      </p>
+                      {productType.variations.length > 0 && (
+                        <div class="mt-2">
+                          <p class="text-sm text-gray-600">
+                            Variations:{' '}
+                            {productType.variations
+                              .map((v) => v.name)
+                              .join(', ')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <button class="btn btn-outline btn-sm">Edit</button>
                   </div>
-                  <button class="btn btn-outline btn-sm">
-                    Edit
-                  </button>
                 </div>
-              </div>
-            ))}
-            <button class="btn btn-primary">
-              Add New Product Type
-            </button>
+              ))
+            }
+            <button class="btn btn-primary"> Add New Product Type </button>
           </div>
         </div>
       </div>
 
       <!-- Save Button -->
       <div class="flex justify-end">
-        <button class="btn btn-primary">
-          Save Settings
-        </button>
+        <button class="btn btn-primary"> Save Settings </button>
       </div>
     </main>
   </div>

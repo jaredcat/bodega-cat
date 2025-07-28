@@ -22,6 +22,7 @@ declare namespace App {
     user?: {
       email: string;
       jwt: string;
+      isDevelopment?: boolean;
     };
   }
 }

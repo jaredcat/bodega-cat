@@ -2,14 +2,19 @@ import { getSiteConfig } from "@/config/site";
 import { stripe } from "@/lib/stripe";
 import type { APIRoute } from "astro";
 
-async function triggerBuildHook(eventType: string, data: Record<string, unknown>) {
+export const prerender = false;
+
+async function triggerBuildHook(
+  eventType: string,
+  data: Record<string, unknown>,
+) {
   if (!process.env.BUILD_HOOK_URL) return;
 
   try {
     const response = await fetch(process.env.BUILD_HOOK_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         event: eventType,
@@ -43,21 +48,21 @@ export const POST: APIRoute = async ({ request }) => {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      siteConfig.stripe.webhookSecret
+      siteConfig.stripe.webhookSecret,
     );
   } catch (err) {
     console.error("Webhook signature verification failed:", err);
     return new Response("Invalid signature", { status: 400 });
   }
 
-    // Handle the event
+  // Handle the event
   const shouldTriggerRebuild = [
     "product.created",
     "product.updated",
     "product.deleted",
     "price.created",
     "price.updated",
-    "price.deleted"
+    "price.deleted",
   ].includes(event.type);
 
   if (shouldTriggerRebuild) {

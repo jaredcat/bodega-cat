@@ -9,8 +9,8 @@
   --color-surface: #f9fafb;
   --color-text: #111827;
   --color-text-secondary: #6b7280;
-  --font-heading: 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-heading: "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
   --border-radius: 0.5rem;
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -122,7 +122,9 @@ h6 {
   background-color: var(--color-surface);
   border-radius: var(--border-radius);
   padding: var(--spacing-lg);
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 /* Form Elements */

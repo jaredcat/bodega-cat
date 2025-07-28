@@ -1,3 +1,5 @@
+import type Stripe from "stripe";
+
 export interface ProductType {
   id: string;
   name: string;
@@ -18,6 +20,55 @@ export interface VariationOption {
   name: string;
   priceModifier: number; // Can be positive or negative
   enabled: boolean;
+}
+
+// New robust variation system
+export interface ProductVariationDefinition {
+  id: string;
+  name: string;
+  displayName: string;
+  type: "independent" | "dependent";
+  order: number; // Order in which variations should be displayed/processed
+  required: boolean;
+  dependsOn?: string[]; // Array of variation IDs this depends on
+  options: ProductVariationOptionDefinition[];
+}
+
+export interface ProductVariationOptionDefinition {
+  id: string;
+  name: string;
+  displayName: string;
+  priceModifier: number; // Can be positive or negative
+  available: boolean;
+  images?: string[];
+  // For dependent variations, define which parent option combinations this is available for
+  availableFor?: {
+    variationId: string;
+    optionIds: string[];
+  }[];
+}
+
+// Runtime variation state
+export interface ProductVariation {
+  id: string;
+  name: string;
+  displayName: string;
+  type: "independent" | "dependent";
+  order: number;
+  required: boolean;
+  dependsOn?: string[];
+  options: ProductVariationOption[];
+  isVisible: boolean; // Whether this variation should be shown based on current selections
+}
+
+export interface ProductVariationOption {
+  id: string;
+  name: string;
+  displayName: string;
+  priceModifier: number;
+  available: boolean;
+  images?: string[];
+  isVisible: boolean; // Whether this option should be shown based on current selections
 }
 
 export interface ProductMetadata {
@@ -46,6 +97,9 @@ export interface Product {
   currency: string;
   stripeProductId?: string;
   stripePriceId?: string;
+  prices?: Stripe.Price[]; // All available prices for this product
+  // New: robust variation system
+  variationDefinitions: ProductVariationDefinition[];
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,4 +1,7 @@
 ---
+export const prerender = false;
+
+import { DevIndicator } from '../../../components/DevIndicator';
 import ProductForm from '../../../components/ProductForm';
 import { getSiteConfig } from '../../../config/site';
 import Layout from '../../../layouts/Layout.astro';
@@ -9,18 +12,21 @@ const siteConfig = getSiteConfig();
 
 <Layout title="Add New Product">
   <div class="min-h-screen bg-gray-50">
+    <!-- Development Mode Indicator -->
+    <DevIndicator
+      isDevelopment={Astro.locals.user?.isDevelopment}
+      client:load
+    />
+
     <!-- Admin Header -->
     <header class="bg-white shadow">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center py-6">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between py-6">
           <div>
             <h1 class="text-3xl font-bold text-gray-900">Add New Product</h1>
             <p class="text-gray-600">Create a new product for your store</p>
           </div>
-          <a
-            href="/admin/products"
-            class="btn btn-outline"
-          >
+          <a href="/admin/products" class="btn btn-outline">
             Back to Products
           </a>
         </div>
@@ -28,7 +34,7 @@ const siteConfig = getSiteConfig();
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <ProductForm
         productTypes={siteConfig.productTypes}
         onSubmit={async (productData: Partial<Product>) => {
@@ -41,8 +47,13 @@ const siteConfig = getSiteConfig();
           // 2. Handle success/error responses
           // 3. Redirect on success
 
-          alert('Product creation would be implemented here. For now, check the console for the product data.');
-          window.location.href = '/admin/products';
+          await new Promise((resolve) => {
+            alert(
+              'Product creation would be implemented here. For now, check the console for the product data.',
+            );
+            window.location.href = '/admin/products';
+            resolve(undefined);
+          });
         }}
         onCancel={() => {
           window.location.href = '/admin/products';
