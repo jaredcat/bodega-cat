@@ -1,0 +1,252 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Navbar from '@components/Navbar';
+import ProductVariations from '@components/ProductVariations';
+import { getSiteConfig } from '@config/site';
+import { getProducts, getProduct } from '@lib/stripe';
+
+export async function getStaticPaths() {
+  try {
+    const products = await getProducts();
+
+    return products.map((product) => ({
+      params: { slug: product.slug },
+      props: { product },
+    }));
+  } catch (error) {
+    console.error('Error generating static paths for products:', error);
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+const siteConfig = getSiteConfig();
+
+// If we have the product from getStaticPaths, use it
+// Otherwise, fetch it (fallback for dynamic routes)
+let product = Astro.props.product;
+if (!product && slug) {
+  const fetchedProduct = await getProduct(slug);
+  if (!fetchedProduct) {
+    return Astro.redirect('/404');
+  }
+  product = fetchedProduct;
+}
+
+if (!product) {
+  return Astro.redirect('/404');
+}
+
+// At this point, product is guaranteed to be non-null
+const safeProduct = product;
+
+const productType = siteConfig.productTypes.find(pt => pt.id === safeProduct.metadata.productTypeId);
+---
+
+<Layout title={safeProduct.name} description={safeProduct.description}>
+  <Navbar siteConfig={siteConfig} client:load />
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Product Images -->
+      <div class="space-y-4">
+        {safeProduct.images.length > 0 ? (
+          <div class="aspect-w-1 aspect-h-1 w-full">
+            <img
+              src={safeProduct.images[0]}
+              alt={safeProduct.name}
+              class="w-full h-full object-cover rounded-lg"
+            />
+          </div>
+        ) : (
+          <div class="aspect-w-1 aspect-h-1 w-full bg-gray-200 rounded-lg flex items-center justify-center">
+            <span class="text-gray-400">No image available</span>
+          </div>
+        )}
+
+        {safeProduct.images.length > 1 && (
+          <div class="grid grid-cols-4 gap-2">
+            {safeProduct.images.slice(1).map((image, index) => (
+              <img
+                src={image}
+                alt={`${safeProduct.name} - Image ${index + 2}`}
+                class="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-75"
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- Product Details -->
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">{safeProduct.name}</h1>
+          <p class="text-lg text-gray-600 mt-2">{safeProduct.description}</p>
+        </div>
+
+        <!-- Price -->
+        <div class="text-2xl font-bold text-primary">
+          ${(safeProduct.basePrice / 100).toFixed(2)}
+        </div>
+
+        <!-- Product Type Info -->
+        {productType && (
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="font-medium text-gray-900 mb-2">{productType.name}</h3>
+            {productType.description && (
+              <p class="text-sm text-gray-600">{productType.description}</p>
+            )}
+          </div>
+        )}
+
+                          <!-- Product Variations -->
+         {productType && productType.variations.length > 0 && (
+           <ProductVariations
+             variations={productType.variations}
+             basePrice={safeProduct.basePrice}
+             client:load
+           />
+         )}
+
+         <!-- Add to Cart Section -->
+         <div class="border-t pt-6">
+           <div class="flex items-center space-x-4 mb-4">
+             <label for="quantity" class="text-sm font-medium text-gray-700">
+               Quantity:
+             </label>
+             <div class="flex items-center border rounded-md">
+               <button
+                 type="button"
+                 onclick="updateQuantity(-1)"
+                 class="px-3 py-1 text-gray-600 hover:text-gray-800"
+               >
+                 -
+               </button>
+               <input
+                 type="number"
+                 id="quantity"
+                 value="1"
+                 min="1"
+                 class="w-16 text-center border-0 focus:ring-0"
+               />
+               <button
+                 type="button"
+                 onclick="updateQuantity(1)"
+                 class="px-3 py-1 text-gray-600 hover:text-gray-800"
+               >
+                 +
+               </button>
+             </div>
+           </div>
+
+           <button
+             onclick="addToCart()"
+             class="w-full btn btn-primary"
+           >
+             Add to Cart
+           </button>
+         </div>
+
+         <!-- Product Metadata -->
+         <div class="border-t pt-6 space-y-2">
+           {safeProduct.metadata.sku && (
+             <p class="text-sm text-gray-600">
+               <span class="font-medium">SKU:</span> {safeProduct.metadata.sku}
+             </p>
+           )}
+           {safeProduct.metadata.brand && (
+             <p class="text-sm text-gray-600">
+               <span class="font-medium">Brand:</span> {safeProduct.metadata.brand}
+             </p>
+           )}
+           {safeProduct.metadata.category && (
+             <p class="text-sm text-gray-600">
+               <span class="font-medium">Category:</span> {safeProduct.metadata.category}
+             </p>
+           )}
+           {safeProduct.metadata.tags.length > 0 && (
+             <div class="flex flex-wrap gap-2">
+               <span class="text-sm font-medium text-gray-600">Tags:</span>
+               {safeProduct.metadata.tags.map((tag) => (
+                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                   {tag}
+                 </span>
+               ))}
+             </div>
+           )}
+         </div>
+      </div>
+    </div>
+  </div>
+
+    <script is:inline define:vars={{
+      productId: safeProduct.id,
+      productName: safeProduct.name,
+      productPrice: safeProduct.basePrice,
+      productImage: safeProduct.images[0] || ""
+    }}>
+    function updateQuantity(change) {
+      const quantityInput = document.getElementById('quantity');
+      if (!quantityInput) return;
+      const currentValue = parseInt(quantityInput.value) || 1;
+      const newValue = Math.max(1, currentValue + change);
+      quantityInput.value = newValue.toString();
+    }
+
+    function addToCart() {
+      const quantityInput = document.getElementById('quantity');
+      if (!quantityInput) return;
+      const quantity = parseInt(quantityInput.value) || 1;
+
+      // Get selected variations
+      const selectedVariations = {};
+      document.querySelectorAll('input[name^="variation-"]:checked').forEach((input) => {
+        const htmlInput = input;
+        const variationId = htmlInput.name.replace('variation-', '');
+        selectedVariations[variationId] = htmlInput.value;
+      });
+
+      const cartItem = {
+        productId: productId,
+        name: productName,
+        price: productPrice,
+        quantity,
+        selectedVariations,
+        image: productImage
+      };
+
+      // Get existing cart
+      const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+      // Check if product already exists in cart
+      const existingItemIndex = existingCart.findIndex((item) =>
+        item.productId === cartItem.productId &&
+        JSON.stringify(item.selectedVariations) === JSON.stringify(cartItem.selectedVariations)
+      );
+
+      if (existingItemIndex >= 0) {
+        existingCart[existingItemIndex].quantity += quantity;
+      } else {
+        existingCart.push(cartItem);
+      }
+
+      // Save to localStorage
+      localStorage.setItem('cart', JSON.stringify(existingCart));
+
+      // Show success message
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      toast.textContent = 'Added to cart!';
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 3000);
+
+      // Update cart count in navbar
+      const cartCount = document.getElementById('cart-count');
+      if (cartCount) {
+        cartCount.textContent = existingCart.length.toString();
+      }
+    }
+  </script>
+</Layout>

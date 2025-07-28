@@ -1,0 +1,74 @@
+---
+import { getSiteConfig } from '@config/site';
+import '@styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description, image } = Astro.props;
+const siteConfig = getSiteConfig();
+
+const metaDescription = description ?? siteConfig.description;
+const metaImage = image ?? siteConfig.logo;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={metaDescription} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={siteConfig.favicon} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | {siteConfig.name}</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={metaDescription} />
+    <meta
+      property="og:image"
+      content={metaImage ? new URL(metaImage, Astro.url) : ''}
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={metaDescription} />
+    <meta
+      property="twitter:image"
+      content={metaImage ? new URL(metaImage, Astro.url) : ''}
+    />
+
+    <!-- Theme CSS Variables -->
+    <style
+      define:vars={{
+        '--color-primary': siteConfig.theme.colors.primary,
+        '--color-secondary': siteConfig.theme.colors.secondary,
+        '--color-accent': siteConfig.theme.colors.accent,
+        '--color-background': siteConfig.theme.colors.background,
+        '--color-surface': siteConfig.theme.colors.surface,
+        '--color-text': siteConfig.theme.colors.text,
+        '--color-text-secondary': siteConfig.theme.colors.textSecondary,
+        '--font-heading': siteConfig.theme.fonts.heading,
+        '--font-body': siteConfig.theme.fonts.body,
+        '--border-radius': siteConfig.theme.borderRadius,
+        '--spacing-xs': siteConfig.theme.spacing.xs,
+        '--spacing-sm': siteConfig.theme.spacing.sm,
+        '--spacing-md': siteConfig.theme.spacing.md,
+        '--spacing-lg': siteConfig.theme.spacing.lg,
+        '--spacing-xl': siteConfig.theme.spacing.xl,
+      }}
+    ></style>
+  </head>
+  <body>
+    <div id="app">
+      <slot />
+    </div>
+  </body>
+</html>

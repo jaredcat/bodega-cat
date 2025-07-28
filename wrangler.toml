@@ -1,0 +1,23 @@
+name = "bodegacat"
+main = "dist/_worker.js"
+compatibility_date = "2024-01-01"
+
+[env.production]
+name = "bodegacat-prod"
+
+[env.staging]
+name = "bodegacat-staging"
+
+# Cloudflare Access configuration for admin routes
+[[env.production.routes]]
+pattern = "/admin/*"
+zone_name = "your-domain.com"
+custom_domain = true
+
+# Environment variables
+[vars]
+NODE_ENV = "production"
+
+# Secrets (set these via wrangler secret put)
+# STRIPE_SECRET_KEY
+# STRIPE_WEBHOOK_SECRET
